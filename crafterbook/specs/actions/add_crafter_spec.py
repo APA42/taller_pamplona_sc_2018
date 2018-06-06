@@ -74,3 +74,13 @@ with description('Add Crafter Action specs') as self:
                 self.add_crafter_action.execute(a_json_input_data)
 
                 expect(self.crafter_management_service.add).to(have_been_called_with(a_json_input_data))
+
+        with context('when validation fails'):
+            with it('raises an Exception'):
+                when(self.validator).raise_error_if_mandatory_parameter_not_exists(ANY_ARG).raises(Exception)
+
+                def add_crafter_action_with_wrong_data():
+                    wrong_input_data = {}
+                    self.add_crafter_action.execute(wrong_input_data)
+
+                expect(add_crafter_action_with_wrong_data).to(raise_error(Exception))
