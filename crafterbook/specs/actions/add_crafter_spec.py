@@ -19,6 +19,9 @@ class AddCrafter(object):
         self._validator.raise_error_if_crafter_name_is_empty(input_data[crafter_name_key])
         self._validator.raise_error_if_crafter_name_is_none(input_data[crafter_name_key])
 
+        self._validator.raise_error_if_crafter_name_exists(input_data[crafter_name_key])
+
+
 
 with description('Add Crafter Action specs') as self:
     with before.each:
@@ -51,3 +54,11 @@ with description('Add Crafter Action specs') as self:
                     self.add_crafter_action.execute(a_json_input_data)
 
                     expect(self.validator.raise_error_if_crafter_name_is_none).to(have_been_called_with(a_crafter_name))
+
+                with it('calls the validator to check crafter_name already exists'):
+                    a_crafter_name = 'a_crafter_name'
+                    a_json_input_data = {'crafter_name': a_crafter_name}
+
+                    self.add_crafter_action.execute(a_json_input_data)
+
+                    expect(self.validator.raise_error_if_crafter_name_exists).to(have_been_called_with(a_crafter_name))
